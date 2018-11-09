@@ -44,17 +44,23 @@ class QueryData(object):
         return bug_list
 
     def query_personnel_list(self):
-        sql = "SELECT CASE resolvedBy WHEN '' THEN assignedTo ELSE resolvedBy END 指派给 FROM zt_bug  " \
-              "WHERE DATE_FORMAT( openedDate, '%%y-%%m-%%d' ) >= DATE_FORMAT( %s, '%%y-%%m-%%d' ) AND " \
-              "product IN %s GROUP BY 指派给;" % (self.start_time, self.world_farm_product_id)
+        sql = "SELECT zu.realname FROM zt_bug zb LEFT JOIN zentao.zt_user zu ON zu.account=" \
+              "(CASE zb.resolvedBy WHEN '' THEN zb.assignedTo ELSE zb.resolvedBy END) " \
+              "WHERE zb.product IN %s AND " \
+              "DATE_FORMAT(zb.openedDate,'%%y-%%m-%%d')>=DATE_FORMAT(%s,'%%y-%%m-%%d') " \
+              "GROUP BY zu.realname;" % (self.world_farm_product_id, self.start_time)
+        print(sql)
         return self.sqldb.sqlsearch(sql, self.conn)
 
     def query_bug_list_by_person(self):
         bug_list = []
         for i in range(1, 5):
-            sql = "SELECT CASE resolvedBy WHEN '' THEN assignedTo ELSE resolvedBy END 指派给, count(*) FROM zt_bug  " \
-                  "WHERE DATE_FORMAT( openedDate, '%%y-%%m-%%d' ) >= DATE_FORMAT( %s, '%%y-%%m-%%d' ) AND " \
-                  "product IN %s AND severity = %s GROUP BY 指派给;" % (self.start_time, self.world_farm_product_id, str(i))
+            sql = "SELECT zu.realname, count(*) FROM zt_bug zb LEFT JOIN zentao.zt_user zu ON zu.account=" \
+              "(CASE zb.resolvedBy WHEN '' THEN zb.assignedTo ELSE zb.resolvedBy END) " \
+              "WHERE zb.product IN %s AND " \
+              "DATE_FORMAT(zb.openedDate,'%%y-%%m-%%d')>=DATE_FORMAT(%s,'%%y-%%m-%%d') " \
+              "AND severity = %s GROUP BY zu.realname;" % (self.world_farm_product_id, self.start_time, str(i))
+            print(sql)
             bug_list.append(self.sqldb.sqlsearch(sql, self.conn))
         return bug_list
 
@@ -75,11 +81,13 @@ class QueryData(object):
         return bug_list
 
     def query_bug_list(self):
-        sql_bug_list = "select product,title,severity," \
-                       "CASE resolvedBy WHEN '' THEN assignedTo ELSE resolvedBy END 指派给, id from zt_bug " \
-                       "WHERE product in %s and status != 'closed' AND " \
-                       "DATE_FORMAT( openedDate, '%%y-%%m-%%d' ) >= DATE_FORMAT( %s, '%%y-%%m-%%d' ) " \
-                       "order BY product, 指派给 ;" % (self.world_farm_product_id, self.start_time)
+        sql_bug_list = "SELECT zb.product,zb.title,zb.severity,zu.realname,zb.id FROM zt_bug zb " \
+                       "LEFT JOIN zentao.zt_user zu ON zu.account=(CASE zb.resolvedBy " \
+                       "WHEN '' THEN zb.assignedTo ELSE zb.resolvedBy END) " \
+                       "WHERE zb.product IN %s AND zb.STATUS='active' " \
+                       "AND DATE_FORMAT(zb.openedDate,'%%y-%%m-%%d')>=DATE_FORMAT(%s,'%%y-%%m-%%d') " \
+                       "ORDER BY zb.product,zu.realname;" % (self.world_farm_product_id, self.start_time)
+        print(sql_bug_list)
         return self.sqldb.sqlsearch(sql_bug_list, self.conn)
 
 
@@ -87,4 +95,4 @@ if __name__ == '__main__':
     Q = QueryData()
     # print(Q.query_create_all(Q.start_time))
     # print(Q.query_bug_list(Q.start_time))
-    print(Q.query_bug_by_date())
+    print(Q.query_personnel_list())
