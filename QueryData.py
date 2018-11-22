@@ -21,18 +21,26 @@ class QueryData(object):
     sqldb = MysqlDb()
     conn = sqldb.conn(host, port, db_name, user, password)
 
-    duan = {
-        'WEB': (4, -1),
-        'ANDROID': (5, -1),
-        'IOS': (6, -1),
-        'SERVER': (7, 8)
-    }
-    world_farm_product_id = (2, 10)
-    miao_shu_pro_id = (4, 5, 6)
     date = time.strftime('%Y-%m-%d', time.localtime(time.time()))
     now_date = datetime.datetime.now().date()
 
     start_time = "'" + '2018-11-2' + "'"
+
+    def __init__(self, product=1):
+        if product == 1:
+            self.duan = {
+                'WEB': (10, -1),
+                'SERVER': (17, 8)
+            }
+            self.world_farm_product_id = (14, -1)
+        else:
+            self.duan = {
+                'WEB': (4, -1),
+                'ANDROID': (5, -1),
+                'IOS': (6, -1),
+                'SERVER': (7, 8)
+            }
+            self.world_farm_product_id = (2, 10)
 
     def query_create_all(self):
         bug_list = []
