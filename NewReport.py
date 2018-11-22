@@ -35,7 +35,8 @@ border = Border(left=Side(style='medium', color='A6A6A6'), right=Side(style='med
 world_farm = {
     2: '运营客服',
     10: '世界农场',
-    14: '苗叔运营后台'
+    14: '苗叔运营后台',
+    15: '苗叔用户端'
 }
 
 
