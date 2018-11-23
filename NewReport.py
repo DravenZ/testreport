@@ -264,7 +264,7 @@ def write_xlsx(*args, **kwargs):
 
 
 if __name__ == '__main__':
-    product = 1
+    product = 2
     Q = QueryData(product)
     filename = str(product) + str(Q.now_date) + "测试报告.xlsx"
     create_xlsx(filename)

@@ -30,11 +30,15 @@ class QueryData(object):
         if product == 1:
             self.duan = {
                 'WEB': (10, -1),
-                'SERVER': (17, 8),
+                'SERVER': (17, 8)
+            }
+            self.world_farm_product_id = (14, -1)
+        elif product == 2:
+            self.duan = {
                 'ANDROID': (16, 12, 13),
                 'IOS': (11, 14, 15)
             }
-            self.world_farm_product_id = (14, 15, -1)
+            self.world_farm_product_id = (15, -1)
         else:
             self.duan = {
                 'WEB': (4, -1),
