@@ -36,7 +36,7 @@ class QueryData(object):
         elif product == 2:
             self.duan = {
                 'ANDROID': (16, 12, 13),
-                'IOS': (11, 14, 15)
+                'IOS': (11, 14, 15, 18)
             }
             self.world_farm_product_id = (15, -1)
         else:
